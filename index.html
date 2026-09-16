@@ -349,7 +349,6 @@ p {
     .contact_services--text { font-size: 20px; line-height: normal; }
     .news-track { scroll-snap-type: none; }
     .news-card:last-child { border-right: 1px solid #dededb; }
-    .news-pause { display: block; margin: 5px auto 0; padding: 6px 14px; border: 0; background: transparent; color: #414840; font: 11px Roboto, sans-serif; cursor: pointer; min-height: 28px; }
     .container-wrapper { min-height: calc(100svh - 187px); }
     @media (max-width: 830px) { .contact p, .contact a { font-size: 12px; } .contact_services--text { font-size: 14px; } }
     @media (max-width: 600px) { .container-wrapper { min-height: calc(100svh - 179px); padding: 32px 20px; } .contact p, .contact a { font-size: 9px; } .contact_services--text { font-size: 12px; } }
@@ -357,8 +356,12 @@ p {
     .news-heading { position: static; width: auto; height: auto; padding: 0 16px; margin: 0 0 18px; overflow: visible; clip-path: none; white-space: normal; display: block; text-align: center; }
     .news-heading h2 { margin: 0; font-size: clamp(18px, 2.1vw, 28px); line-height: 1.35; letter-spacing: -.025em; font-weight: 500; }
     .news-heading h2 strong { color: #bf1768; font-weight: 900; }
-    .container-wrapper { min-height: calc(100svh - 243px); }
-    @media (max-width: 600px) { .news-heading { margin-bottom: 14px; padding-inline: 12px; } .container-wrapper { min-height: calc(100svh - 242px); } }
+    .container-wrapper { min-height: calc(100svh - 210px); }
+    @media (max-width: 600px) { .news-heading { margin-bottom: 14px; padding-inline: 12px; } .container-wrapper { min-height: calc(100svh - 209px); } }
+  /* Keep the promotional strip directly below the contact details. */
+    .container-wrapper { min-height: 100svh; padding: 40px 16px; }
+    .container-wrapper-content > .news { margin-top: 28px; text-align: left; }
+    @media (max-width: 600px) { .container-wrapper { padding: 32px 8px; } .container-wrapper-content > .news { margin-top: 24px; } }
   </style>
 </head>
 <body>
@@ -378,21 +381,6 @@ p {
           <p><span>RM Design, Robert Metličar s.p.,</span><span> Trčova 169, SI - 2229 Malečnik</span></p>
           <p><a href="tel:+38668641427">+386 68 641 427</a><br><a href="tel:+38641758117">+386 41 758 117</a><br><a href="mailto:info@rm-design.si">info@rm-design.si</a></p>
         </div>
-
-        
-    </div>
-</div>
-
-
-
-
-<dialog class="news-dialog" aria-labelledby="news-detail-title">
- <button type="button" aria-label="Zapri">×</button>
- <h2 id="news-detail-title"></h2><p class="news-detail-copy"></p>
- <p>Za več informacij o možnostih personalizacije nam pišite.</p>
- <a href="mailto:info@rm-design.si">info@rm-design.si ↗</a>
-</dialog>
-        
 <section class="news" aria-labelledby="news-title">
  <div class="news-inner">
   <header class="news-heading">
@@ -437,6 +425,22 @@ p {
   </div>
  </div>
 </section>
+
+        
+    </div>
+</div>
+
+
+
+
+<dialog class="news-dialog" aria-labelledby="news-detail-title">
+ <button type="button" aria-label="Zapri">×</button>
+ <h2 id="news-detail-title"></h2><p class="news-detail-copy"></p>
+ <p>Za več informacij o možnostih personalizacije nam pišite.</p>
+ <a href="mailto:info@rm-design.si">info@rm-design.si ↗</a>
+</dialog>
+        
+
 <script>
 (() => {
  const section = document.querySelector('.news');
@@ -454,11 +458,7 @@ p {
    clone.querySelectorAll('button').forEach(button => button.tabIndex = -1);
    track.append(clone);
  });
- const pause = document.createElement('button');
- pause.className = 'news-pause'; pause.type = 'button';
- pause.textContent = 'Zaustavi premikanje'; pause.setAttribute('aria-pressed', 'false');
- section.querySelector('.news-inner').append(pause);
- let paused = false, hovering = false, focused = false, interacting = false, resumeAt = 0;
+ let hovering = false, focused = false, interacting = false, resumeAt = 0;
  let cycle = 0, previousTime = 0, fraction = 0;
  const measure = () => { cycle = originals.length * originals[0].getBoundingClientRect().width; };
  new ResizeObserver(measure).observe(track);
@@ -488,13 +488,6 @@ p {
  window.addEventListener('pointerup', () => { if(interacting) { interacting = false; resumeAt = performance.now() + 5000; } });
  window.addEventListener('pointercancel', () => { interacting = false; resumeAt = performance.now() + 5000; });
  track.addEventListener('wheel', () => { resumeAt = performance.now() + 5000; }, {passive:true});
- pause.addEventListener('click', () => {
-   paused = !paused;
-   pause.textContent = paused ? 'Nadaljuj premikanje' : 'Zaustavi premikanje';
-   pause.setAttribute('aria-pressed', String(paused));
- });
- const motionPreference = () => { pause.hidden = reduced.matches; };
- reduced.addEventListener('change', motionPreference); motionPreference();
  section.querySelectorAll('.news-card__open').forEach(button => button.addEventListener('click', () => {
    dialog.querySelector('h2').textContent = button.querySelector('.news-card__title').textContent;
    dialog.querySelector('.news-detail-copy').textContent = button.querySelector('.news-card__excerpt').textContent;
@@ -503,7 +496,7 @@ p {
  dialog.querySelector('button').addEventListener('click', () => dialog.close());
  function tick(time) {
    const elapsed = Math.min(time - previousTime, 50); previousTime = time;
-   if (!paused && !hovering && !focused && !interacting && !reduced.matches && !document.hidden && !dialog.open && time > resumeAt && cycle > 0) {
+   if (!hovering && !focused && !interacting && !reduced.matches && !document.hidden && !dialog.open && time > resumeAt && cycle > 0) {
      fraction += elapsed * 0.022; // 22 pixels per second.
      const pixels = Math.floor(fraction); fraction -= pixels;
      track.scrollLeft += pixels; normalize();
