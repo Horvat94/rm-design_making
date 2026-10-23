@@ -110,7 +110,7 @@ p {
 
 @media only screen and (max-width: 830px) {
   .container-wrapper--img{
-    width: 300px;
+    width: 400px;
     height: auto;
   position: relative;
   left: 0;
@@ -142,7 +142,7 @@ p {
     .background-image{
         background-image: url(Background_dots_small.svg);
         background-position: center 73%;
-        background-size: 292%
+        background-size: 292% !important;
     }
 }
 
@@ -174,8 +174,8 @@ p {
     .background-image{
   background-image: url("Background_dots_small.svg");
  
-  background-size: 302%;
-  background-position: center 28%;
+  background-size: 302% !important;
+  background-position: center 28%!important;
 
     }
     .contact_services--text{
@@ -548,6 +548,7 @@ p {
       .landing-page .contact p, .landing-page .contact a { font-size:clamp(.7rem,3vw,.85rem); line-height:1.35; }
       .landing-page .news-heading { margin-bottom:clamp(.5rem,1.5dvh,.9rem); }
       .landing-page .news-heading h2 { font-size:clamp(.9rem,4.2vw,1.2rem); }
+      .landing-page .container-wrapper-content > .news { margin-top:clamp(.75rem,2dvh,1.25rem); }
       .landing-page .background-image { width:100%; left:0; background-size:100% 100%; background-position:center; }
       .landing-page .container-wrapper-content { width:calc(100% - 1.5rem); background:#fff; }
     }
@@ -559,6 +560,30 @@ p {
       .landing-page .contact_services--text { font-size:clamp(.62rem,2.8vw,.78rem); }
       .landing-page .contact p, .landing-page .contact a { font-size:clamp(.62rem,2.6vw,.75rem); }
     }
+    /* Below the tablet breakpoint, enlarge the decorative source so its circles sit toward the edges. */
+    @media (max-width:866px) {
+      .landing-page .background-image {
+        background-size: 140% 140%;
+        background-position: center;
+      }
+    }
+    @media (max-width:600px) {
+      .landing-page .background-image { background-size: 140% 140%; }
+    }
+    /* Keep the original tablet sizing effective after the viewport-aware rules. */
+    @media only screen and (max-width:830px) and (min-width:601px) {
+      .landing-page .container-wrapper--img { width:300px !important; max-width:100%; }
+      .landing-page .headline { font-size:50px !important; }
+      .landing-page .container-wrapper-content > p { font-size:16px !important; }
+      .landing-page .contact_services--text { font-size:14px !important; }
+      .landing-page .contact p, .landing-page .contact a { font-size:12px !important; }
+    }
+    /* Centre the complete outlet block at every responsive width. */
+    .landing-page .container-wrapper-content > .news { align-self:center; }
+    .landing-page .news-inner { display:flex; flex-direction:column; align-items:center; margin-inline:auto; }
+    .landing-page .news-heading, .landing-page .news-reel { width:100%; }
+    .landing-page .news-heading { justify-content:center; }
+    .landing-page .news-track { margin-inline:auto; }
   </style>
 </head>
 <body class="landing-page">
@@ -586,7 +611,6 @@ p {
   </header>
   <!-- Sample news: edit each article's badge, title, image and excerpt here. -->
   <div class="news-reel">
-   <button class="news-arrow news-prev" type="button" aria-label="Prejšnje novice" aria-controls="news-track" hidden>←</button>
    <div class="news-track" id="news-track" tabindex="0" role="region" aria-label="Novosti – vodoravni seznam">
 <article class="news-card">
     <button class="news-card__open" type="button" aria-haspopup="dialog" aria-label="Preberi več: Nova kolekcija majic">
@@ -619,7 +643,6 @@ p {
     </button>
   </article>
    </div>
-   <button class="news-arrow news-next" type="button" aria-label="Naslednje novice" aria-controls="news-track" hidden>→</button>
   </div>
  </div>
 </section>
@@ -645,8 +668,6 @@ p {
  const track = section.querySelector('.news-track');
  const originals = [...track.children];
  if (!originals.length) { section.hidden = true; return; }
- const prev = section.querySelector('.news-prev');
- const next = section.querySelector('.news-next');
  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
  const dialog = document.querySelector('.news-dialog');
  // Duplicate the sequence for a seamless visual loop; keep one accessible set.
@@ -657,7 +678,7 @@ p {
    track.append(clone);
  });
  let hovering = false, focused = false, interacting = false, resumeAt = 0;
- let cycle = 0, previousTime = 0, fraction = 0;
+ let cycle = 0;
  const measure = () => {
    const firstDuplicate = track.children[originals.length];
    cycle = firstDuplicate
@@ -687,10 +708,6 @@ p {
    };
    transitionFrame = requestAnimationFrame(animate);
  };
- prev.hidden = next.hidden = false;
- prev.disabled = next.disabled = originals.length < 2;
- prev.addEventListener('click', () => move(-1));
- next.addEventListener('click', () => move(1));
  track.addEventListener('scroll', normalize, {passive:true});
  track.addEventListener('keydown', event => {
    if (event.target === track && ['ArrowLeft', 'ArrowRight'].includes(event.key)) {
