@@ -450,8 +450,11 @@ p {
       .news-heading { margin-bottom: .35rem; }
     }
     /* The compact outlet strip advances on its own; navigation arrows are unnecessary. */
-    .news-reel { grid-template-columns: minmax(0, 1fr); }
+    .news, .news-inner, .news-reel { width: 100%; max-width: 100%; min-width: 0; }
+    .news { overflow: hidden; }
+    .news-reel { grid-template-columns: minmax(0, 1fr); min-width: 0; }
     .news-arrow { display: none !important; }
+    .news-track { width: 100%; min-width: 0; max-width: 100%; }
     @media (max-width: 600px) {
       .container-wrapper-content > .news { margin-top: clamp(.5rem, 1.5dvh, 1rem); }
       .news-reel { grid-template-columns: minmax(0, 1fr); }
@@ -475,9 +478,90 @@ p {
       .news-card { width: 100%; min-width: 100%; scroll-snap-align: center; }
       .news-card:last-child { border-right: 0; }
     }
+    .news-heading { display: flex; align-items: center; justify-content: center; gap: clamp(.45rem, 1vw, .8rem); text-align: left; }
+    .outlet-heading-logo { width: clamp(40px, 5vw, 60px); height: auto; flex: 0 0 auto; object-fit: contain; }
+    .news-heading h2 { margin: 0; }
+    @media (max-height: 800px) { .outlet-heading-logo { width: 55px; } }
+    @media (max-width: 600px) {
+      .outlet-heading-logo { width: 42px; }
+      .news-heading { padding-inline: 8px; gap: .45rem; }
+      .news-heading h2 { white-space: normal; }
+      .background-image {
+        width: 140%;
+        left: -20%;
+        background-size: 220% auto;
+        background-position: center 72%;
+        position: absolute;
+        height: 100%;
+        max-height: none;
+      }
+      .container-wrapper { min-height: auto; }
+      html, body { min-height: 0; }
+    }
+    /* Keep decorative circles anchored to the viewport, independent of content height. */
+    html, body { overflow-x: hidden; }
+    .background-image {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      max-height: none;
+      pointer-events: none;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+    .container-wrapper-content {
+      position: relative;
+      z-index: 1;
+      top: auto;
+      left: auto;
+      right: auto;
+      transform: none;
+      margin-inline: auto;
+    }
+    @media (max-width: 600px) {
+      .background-image {
+        width: 100%;
+        left: 0;
+        background-size: 100% 100%;
+        background-position: center;
+      }
+    }
+    /* Final full-height flex layout for the landing page. */
+    .landing-page { display:flex; flex-direction:column; min-height:100vh; min-height:100dvh; position:relative; overflow-x:hidden; }
+    .landing-page .container-wrapper { flex:1 1 auto; min-height:0; height:auto; display:flex; flex-direction:column; align-items:stretch; padding:clamp(1rem,4dvh,3rem) clamp(1rem,3vw,2.5rem); }
+    .landing-page .container-wrapper-content { flex:1 1 auto; min-height:0; display:flex; flex-direction:column; justify-content:center; width:min(100%,90rem); margin-inline:auto; }
+    .landing-page .container-wrapper--img { width:clamp(10rem,30vw,31.25rem); max-height:clamp(8rem,32dvh,22rem); object-fit:contain; margin-inline:auto; }
+    .landing-page .container-wrapper-content > .news { flex:0 0 auto; width:100%; margin-top:auto; }
+    .landing-page .background-image { position:fixed; inset:0; width:100%; height:100vh; height:100dvh; z-index:-1; pointer-events:none; background-position:center; background-size:cover; }
+    @media (max-width:600px) {
+      html,body { min-height:100%; }
+      .landing-page .container-wrapper { min-height:100vh; min-height:100dvh; padding:clamp(1rem,4dvh,2rem) .5rem; }
+      .landing-page .container-wrapper-content { justify-content:center; }
+      .landing-page .container-wrapper--img { width:clamp(10rem,48vw,13rem); max-height:clamp(8rem,24dvh,12rem); }
+      .landing-page .headline { margin-block:clamp(.5rem,1.8dvh,1rem); font-size:clamp(1.8rem,8vw,2.5rem); }
+      .landing-page .container-wrapper-content > p { margin-block:clamp(.3rem,1dvh,.65rem); font-size:clamp(.9rem,3.8vw,1.1rem); }
+      .landing-page .contact_services--text { font-size:clamp(.7rem,3.2vw,.9rem); line-height:1.35; }
+      .landing-page .contact p, .landing-page .contact a { font-size:clamp(.7rem,3vw,.85rem); line-height:1.35; }
+      .landing-page .news-heading { margin-bottom:clamp(.5rem,1.5dvh,.9rem); }
+      .landing-page .news-heading h2 { font-size:clamp(.9rem,4.2vw,1.2rem); }
+      .landing-page .background-image { width:100%; left:0; background-size:100% 100%; background-position:center; }
+      .landing-page .container-wrapper-content { width:calc(100% - 1.5rem); background:#fff; }
+    }
+    @media (max-height:700px) and (max-width:600px) {
+      .landing-page .container-wrapper { padding-block:.65rem; }
+      .landing-page .container-wrapper--img { width:clamp(8.5rem,40vw,11rem); max-height:18dvh; }
+      .landing-page .headline { font-size:clamp(1.55rem,7vw,2rem); margin-block:.25rem; }
+      .landing-page .container-wrapper-content > p { margin-block:.2rem; font-size:clamp(.8rem,3.3vw,1rem); }
+      .landing-page .contact_services--text { font-size:clamp(.62rem,2.8vw,.78rem); }
+      .landing-page .contact p, .landing-page .contact a { font-size:clamp(.62rem,2.6vw,.75rem); }
+    }
   </style>
 </head>
-<body>
+<body class="landing-page">
 
   <div class="background-image"></div>
 
@@ -497,6 +581,7 @@ p {
 <section class="news" aria-labelledby="news-title">
  <div class="news-inner">
   <header class="news-heading">
+   <img class="outlet-heading-logo" src="TOP_OUTLET_SI_logo_10_2026.png" alt="TOP OUTLET ponudba">
    <h2 id="news-title">Naše <strong>TOP-OUTLET PONUDBE</strong> so vam ves čas na voljo</h2>
   </header>
   <!-- Sample news: edit each article's badge, title, image and excerpt here. -->
@@ -573,7 +658,12 @@ p {
  });
  let hovering = false, focused = false, interacting = false, resumeAt = 0;
  let cycle = 0, previousTime = 0, fraction = 0;
- const measure = () => { cycle = originals.length * originals[0].getBoundingClientRect().width; };
+ const measure = () => {
+   const firstDuplicate = track.children[originals.length];
+   cycle = firstDuplicate
+     ? firstDuplicate.offsetLeft - originals[0].offsetLeft
+     : originals.length * originals[0].getBoundingClientRect().width;
+ };
  new ResizeObserver(measure).observe(track);
  const normalize = () => {
    if (cycle > 0 && track.scrollLeft >= cycle) track.scrollLeft -= cycle;
