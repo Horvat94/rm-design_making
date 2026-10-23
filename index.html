@@ -362,6 +362,86 @@ p {
     .container-wrapper { min-height: 100svh; padding: 40px 16px; }
     .container-wrapper-content > .news { margin-top: 28px; text-align: left; }
     @media (max-width: 600px) { .container-wrapper { padding: 32px 8px; } .container-wrapper-content > .news { margin-top: 24px; } }
+
+    /* Viewport-aware landing layout. The page may grow naturally when text is enlarged. */
+    html { min-height: 100%; }
+    body { min-height: 100vh; min-height: 100dvh; overflow-x: hidden; overflow-y: auto; }
+    .background-image { position: fixed; inset: 0; width: 100%; height: 100%; max-height: 100dvh; }
+    .container-wrapper {
+      position: relative;
+      display: flex;
+      align-items: stretch;
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      height: auto;
+      padding: clamp(1rem, 4dvh, 3rem) clamp(1rem, 3vw, 2.5rem);
+    }
+    .container-wrapper-content {
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      justify-content: center;
+      width: min(100%, 90rem);
+      min-width: 0;
+      margin-inline: auto;
+      position: static;
+      transform: none;
+    }
+    .container-wrapper--img {
+      width: clamp(9rem, 30vw, 31.25rem);
+      max-height: clamp(7rem, 34dvh, 22rem);
+      object-fit: contain;
+      margin-inline: auto;
+    }
+    .headline { margin: clamp(.25rem, 1.2dvh, 1rem) 0; font-size: clamp(2rem, 5.2vw, 3.75rem); }
+    .container-wrapper-content > p { margin-block: clamp(.25rem, 1dvh, .75rem); }
+    .contact { flex: 0 0 auto; }
+    .container-wrapper-content > .news { flex: 0 0 auto; width: 100%; margin-top: clamp(.75rem, 2.5dvh, 1.75rem); }
+    .news { padding-block: clamp(.6rem, 1.8dvh, 1.15rem); }
+    .news-heading { margin-bottom: clamp(.45rem, 1.2dvh, 1rem); }
+    .news-heading h2 { font-size: clamp(1rem, 2.1vw, 1.75rem); }
+    .news-card__open { min-height: clamp(4.2rem, 11dvh, 6.5rem); }
+    .news-card__media { width: clamp(3rem, 5.5vw, 4.75rem); height: clamp(3rem, 5.5vw, 4.75rem); }
+    .news-card__body { padding-top: clamp(.7rem, 2dvh, 1.3rem); }
+
+    @media (max-height: 800px) and (min-width: 601px) {
+      .container-wrapper { padding-block: clamp(.65rem, 2.5dvh, 1.5rem); }
+      .container-wrapper--img { width: clamp(8rem, 24vw, 21rem); max-height: 25dvh; }
+      .headline { font-size: clamp(1.9rem, 4.5vw, 3.25rem); }
+      .container-wrapper-content > p { margin-block: .15rem; }
+      .container-wrapper-content > .news { margin-top: clamp(.5rem, 1.6dvh, 1rem); }
+    }
+    @media (max-height: 740px) and (min-width: 601px) {
+      .container-wrapper { padding-block: .5rem; }
+      .container-wrapper--img { width: clamp(7.5rem, 20vw, 17rem); max-height: 21dvh; }
+      .headline { font-size: clamp(1.75rem, 4vw, 2.8rem); }
+      .contact_services--text { font-size: clamp(.75rem, 1.2vw, 1rem); }
+      .contact p, .contact a { font-size: clamp(.65rem, 1vw, .8rem); }
+      .news-card__open { min-height: 4.5rem; }
+    }
+    @media (max-width: 600px) {
+      .container-wrapper { min-height: 100vh; min-height: 100dvh; padding: clamp(.75rem, 3dvh, 1.5rem) .5rem; }
+      .container-wrapper-content { justify-content: flex-start; }
+      .container-wrapper--img { width: clamp(8.5rem, 52vw, 13rem); max-height: 23dvh; }
+      .headline { font-size: clamp(1.55rem, 8vw, 2.15rem); margin-block: .3rem; }
+      .container-wrapper-content > p { font-size: clamp(.8rem, 3.8vw, 1rem); margin-block: .2rem; }
+      .contact_services--text { font-size: clamp(.65rem, 3.1vw, .8rem); }
+      .contact p, .contact a { font-size: clamp(.62rem, 2.8vw, .75rem); }
+      .container-wrapper-content > .news { margin-top: auto; }
+      .news-heading h2 { font-size: clamp(.9rem, 4.4vw, 1.15rem); }
+      .news-card__open { min-height: 4.5rem; }
+    }
+    @media (max-height: 700px) and (max-width: 600px) {
+      .container-wrapper { padding-block: .5rem; }
+      .container-wrapper--img { width: clamp(7rem, 38vw, 10rem); max-height: 18dvh; }
+      .headline { font-size: clamp(1.35rem, 7vw, 1.8rem); }
+      .container-wrapper-content > p { font-size: clamp(.72rem, 3.3vw, .9rem); }
+      .contact_services--text { font-size: clamp(.58rem, 2.7vw, .72rem); }
+      .contact p, .contact a { font-size: clamp(.55rem, 2.4vw, .68rem); }
+      .news { padding-block: .45rem; }
+      .news-heading { margin-bottom: .35rem; }
+    }
   </style>
 </head>
 <body>
