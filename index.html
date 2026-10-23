@@ -442,6 +442,14 @@ p {
       .news { padding-block: .45rem; }
       .news-heading { margin-bottom: .35rem; }
     }
+    /* The compact outlet strip advances on its own; navigation arrows are unnecessary. */
+    .news-reel { grid-template-columns: minmax(0, 1fr); }
+    .news-arrow { display: none !important; }
+    @media (max-width: 600px) {
+      .container-wrapper-content > .news { margin-top: clamp(.5rem, 1.5dvh, 1rem); }
+      .news-reel { grid-template-columns: minmax(0, 1fr); }
+      .news-track { grid-column: 1; }
+    }
   </style>
 </head>
 <body>
@@ -545,10 +553,24 @@ p {
  const normalize = () => {
    if (cycle > 0 && track.scrollLeft >= cycle) track.scrollLeft -= cycle;
  };
+ let transitionFrame = 0;
  const move = direction => {
    resumeAt = performance.now() + 5000;
    if (direction < 0 && track.scrollLeft < originals[0].getBoundingClientRect().width) track.scrollLeft += cycle;
-   track.scrollBy({left: direction * originals[0].getBoundingClientRect().width, behavior: reduced.matches ? 'instant' : 'smooth'});
+   const start = track.scrollLeft;
+   const distance = direction * originals[0].getBoundingClientRect().width;
+   if (reduced.matches) { track.scrollLeft = start + distance; normalize(); return; }
+   cancelAnimationFrame(transitionFrame);
+   const started = performance.now();
+   const duration = 900;
+   const animate = now => {
+     const progress = Math.min(1, (now - started) / duration);
+     const eased = progress < .5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+     track.scrollLeft = start + distance * eased;
+     if (progress < 1) transitionFrame = requestAnimationFrame(animate);
+     else normalize();
+   };
+   transitionFrame = requestAnimationFrame(animate);
  };
  prev.hidden = next.hidden = false;
  prev.disabled = next.disabled = originals.length < 2;
@@ -574,16 +596,14 @@ p {
    dialog.showModal();
  }));
  dialog.querySelector('button').addEventListener('click', () => dialog.close());
- function tick(time) {
-   const elapsed = Math.min(time - previousTime, 50); previousTime = time;
-   if (!hovering && !focused && !interacting && !reduced.matches && !document.hidden && !dialog.open && time > resumeAt && cycle > 0) {
-     fraction += elapsed * 0.022; // 22 pixels per second.
-     const pixels = Math.floor(fraction); fraction -= pixels;
-     track.scrollLeft += pixels; normalize();
-   }
-   requestAnimationFrame(tick);
+ function advance() {
+   const now = performance.now();
+   if (hovering || focused || interacting || reduced.matches || document.hidden || dialog.open || now < resumeAt || cycle <= 0) return;
+   move(1);
  }
- measure(); requestAnimationFrame(tick);
+ measure();
+ // Let each offer remain readable for four seconds before advancing one item.
+ window.setInterval(advance, 4000);
 })();
 </script>
 
