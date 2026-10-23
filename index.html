@@ -337,9 +337,16 @@ p {
       .news-next { grid-column: 3; grid-row: 1; }
       .news-arrow { width: 32px; height: 44px; border-radius: 20px; }
       .news-card__open { grid-template-columns: 64px minmax(0, 1fr); padding-inline: 8px; gap: 10px; }
-      .news-card__media { width: 64px; height: 64px; }
+    .news-card__media { width: 64px; height: 64px; }
       .news-badge { left: 82px; }
-      .news-card__title { font-size: 13px; }
+    .news-card__title { font-size: 13px; }
+    }
+    /* Keep each offer's image, label and text together in the centre of its slot. */
+    .news-card__open { grid-template-columns: minmax(3.5rem, 4.75rem) minmax(7rem, 12rem); justify-content: center; justify-items: center; column-gap: clamp(.5rem, 1vw, 1rem); }
+    .news-card__body { width: 100%; text-align: left; }
+    .news-card__link { justify-content: flex-start; }
+    @media (max-width: 600px) {
+      .news-card__open { grid-template-columns: 4rem minmax(8rem, 1fr); justify-content: start; justify-items: center; }
     }
   /* Preserve the original centered message and contact block above the strip. */
     .container-wrapper { min-height: calc(100svh - 154px); padding: 40px 24px; }
@@ -449,6 +456,24 @@ p {
       .container-wrapper-content > .news { margin-top: clamp(.5rem, 1.5dvh, 1rem); }
       .news-reel { grid-template-columns: minmax(0, 1fr); }
       .news-track { grid-column: 1; }
+      .news-track { grid-auto-columns: 100%; }
+      .news-card { width: 100%; }
+      .news-card__open { width: 100%; grid-template-columns: 4rem minmax(8rem, 12rem); justify-content: center; }
+      .news-card__body { width: 12rem; }
+    }
+    @media (max-width: 480px) {
+      .container-wrapper--img { width: clamp(8rem, 43vw, 11rem); }
+      .headline { font-size: clamp(1.45rem, 7.2vw, 1.95rem); }
+      .contact_services--text { font-size: clamp(.58rem, 2.7vw, .72rem); letter-spacing: -.02em; }
+      .contact p, .contact a { font-size: clamp(.58rem, 2.7vw, .72rem); }
+      .news-heading { padding-inline: 4px; }
+      .news-heading h2 { font-size: clamp(.78rem, 3.45vw, 1rem); white-space: nowrap; letter-spacing: -.035em; }
+    }
+    /* Phone layout: one complete offer per view; wider screens keep their multi-item reel. */
+    @media (max-width: 600px) {
+      .news-track { grid-auto-columns: 100%; grid-template-columns: none; overflow-x: auto; scroll-snap-type: x mandatory; padding-inline: 0; }
+      .news-card { width: 100%; min-width: 100%; scroll-snap-align: center; }
+      .news-card:last-child { border-right: 0; }
     }
   </style>
 </head>
@@ -602,8 +627,8 @@ p {
    move(1);
  }
  measure();
- // Let each offer remain readable for four seconds before advancing one item.
- window.setInterval(advance, 4000);
+ // Let each offer remain readable for 2.5 seconds before advancing one item.
+ window.setInterval(advance, 2500);
 })();
 </script>
 
