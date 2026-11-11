@@ -233,16 +233,14 @@ body {
   padding: .25rem .4rem;
   border-radius: .2rem;
   color: #fff;
-  background: #56734d;
+  background: var(--outlet-accent);
   font-size: .5rem;
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: .035em;
   text-align: center;
 }
-.news-card:nth-child(5n + 2) .news-badge,
-.news-card:nth-child(5n + 4) .news-badge { color: #39352a; background: #e8d9b6; }
-.news-card:nth-child(5n + 3) .news-badge { background: #d83d68; }
+
 .news-card__body {
   display: flex;
   flex-direction: column;
