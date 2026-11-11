@@ -128,8 +128,8 @@ body {
   /*margin-top: clamp(1rem, 3vw, 2.5rem);*/
   padding: clamp(1.25rem, 2.5vw, 2.25rem) 0 0;
   overflow: hidden;
-  background: #fff;
   margin-top: auto;
+  background: linear-gradient(to bottom, transparent 10%, #fff 20%);
 }
 .news-inner { width: min(100% - 2rem, 100rem); min-width: 0; margin-inline: auto; }
 .news-heading {
